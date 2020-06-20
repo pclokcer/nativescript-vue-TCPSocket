@@ -137,6 +137,7 @@ export default {
     this.cute();
     this.text = "";
     this.sendMessage = [];
+    this.$store.state.clients = [];
   }
 };
 </script>

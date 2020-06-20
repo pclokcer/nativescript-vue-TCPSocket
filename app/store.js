@@ -42,6 +42,7 @@ export default new Vuex.Store({
             context.state.tcpClient.send(data);
         },
         socket_close(context) {
+            if (context.state.tcpClient == '') return
             context.state.tcpClient.stop();
         }
     }

@@ -103,7 +103,7 @@ export default {
     return {
       depo: [
         { name: "test", ip: "192.168.1.7", port: "3000" },
-        { name: "sdf", ip: "sdsdg", port: "sdsdssg" }
+        { name: "server", ip: "176.235.81.119", port: "3306" }
       ],
       ip: "",
       port: "",
