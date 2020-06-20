@@ -1,15 +1,101 @@
 <template>
-  <Page style="background-color:white">
+  <Page class="page">
     <ActionBar>
       <Label :text="name" />
       <!-- <NavigationButton icon="res://ic_arrow_back_black_24dp" (tap)="goBack()"></NavigationButton>-->
       <NavigationButton android.systemIcon="ic_menu_back" @tap="$navigateBack()"></NavigationButton>
     </ActionBar>
-    <StackLayout>
-      <GridLayout columns="*" rows="*">
-        <Button text="index" @tap="onButtonTap" />
+    <GridLayout columns="*" rows="auto,auto,auto">
+      <GridLayout col="0" row="0" columns="*,*" rows="auto">
+        <Button
+          :isEnabled="connectButton"
+          col="0"
+          row="0"
+          androidElevation="6"
+          class="btn -rounded-lg"
+          text="Bağlan"
+          @tap="baglan"
+        />
+        <Button
+          :isEnabled="cuteButton"
+          col="1"
+          row="0"
+          androidElevation="6"
+          class="btn -rounded-lg"
+          text="Bağlantıyı Kes"
+          @tap="cute"
+        />
       </GridLayout>
-    </StackLayout>
+      <GridLayout col="0" row="1" columns="*" rows="auto,150,auto,170">
+        <Label col="0" row="0" class="text-left m-l-15 h3 m-t-5" style="color:black;" text="Gelen" />
+        <ScrollView
+          class="m-l-15 m-r-15"
+          style="border-radius:30px; background-color: white;"
+          androidElevation="6"
+          col="0"
+          row="1"
+          scrollBarIndicatorVisible="false"
+        >
+          <StackLayout>
+            <Label
+              col="0"
+              row="0"
+              class="text-left m-l-15 h3 m-t-5 m-b-5 body"
+              style="color:black;"
+              :text="'Sunucu: ' + item"
+              v-for="(item,index) in $store.state.clients"
+              :key="index"
+            />
+          </StackLayout>
+        </ScrollView>
+        <Label
+          col="0"
+          row="2"
+          class="text-left m-l-15 h3 m-t-20 body"
+          style="color:black;"
+          text="Giden"
+        />
+        <ScrollView
+          col="0"
+          row="3"
+          class="m-l-15 m-r-15 m-b-8"
+          style="border-radius:30px; background-color: white;"
+          androidElevation="6"
+          scrollBarIndicatorVisible="false"
+        >
+          <StackLayout>
+            <Label
+              col="0"
+              row="0"
+              class="text-left m-l-15 h3 m-t-5"
+              style="color:black;"
+              :text="'Sen: ' + item"
+              v-for="(item,index) in sendMessage"
+              :key="index"
+            />
+          </StackLayout>
+        </ScrollView>
+      </GridLayout>
+      <GridLayout col="0" row="2" columns="*" rows="auto,auto">
+        <TextField
+          class="-border -rounded m-t-10 text"
+          style="color:black;border-color: gray;"
+          hint="Yazınız..."
+          v-model="text"
+          col="0"
+          row="0"
+        />
+        <Button
+          :isEnabled="buttonStatus"
+          col="0"
+          row="1"
+          androidElevation="6"
+          class="btn -rounded-lg"
+          text="Gönder"
+          @tap="send"
+        />
+      </GridLayout>
+    </GridLayout>
   </Page>
 </template>
 
@@ -17,16 +103,46 @@
 export default {
   props: ["name", "port", "ip"],
   data() {
-    return {};
+    return {
+      sendMessage: [],
+      text: "",
+      buttonStatus: false,
+      connectButton: true,
+      cuteButton: false
+    };
   },
   methods: {
-    onButtonTap() {},
+    send() {
+      this.$store.dispatch("send_message", this.text);
+      this.sendMessage.push(this.text);
+      this.text = "";
+    },
     baglan() {
-      this.$store.dispatch("socket_baglan", this.ip, this.port);
+      this.$store
+        .dispatch("socket_baglan", { ip: this.ip, port: this.port })
+        .then(response => {
+          this.buttonStatus = true;
+          this.connectButton = false;
+          this.cuteButton = true;
+        });
+    },
+    cute() {
+      this.$store.dispatch("socket_close");
+      this.buttonStatus = false;
+      this.connectButton = true;
+      this.cuteButton = false;
     }
+  },
+  beforeDestroy() {
+    this.cute();
+    this.text = "";
+    this.sendMessage = [];
   }
 };
 </script>
 
-<style>
+<style scoped>
+.page {
+  background-color: rgb(241, 241, 241);
+}
 </style>

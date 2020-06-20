@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       depo: [
-        { name: "sdf", ip: "sdsdg", port: "sdsdssg" },
+        { name: "test", ip: "192.168.1.7", port: "3000" },
         { name: "sdf", ip: "sdsdg", port: "sdsdssg" }
       ],
       ip: "",
