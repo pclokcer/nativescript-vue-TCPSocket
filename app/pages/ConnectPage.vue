@@ -8,7 +8,7 @@
     <GridLayout columns="*" rows="auto,auto,auto">
       <GridLayout col="0" row="0" columns="*,*" rows="auto">
         <Button
-          :isEnabled="connectButton"
+          :isEnabled="$store.state.connectButton"
           col="0"
           row="0"
           androidElevation="6"
@@ -17,7 +17,7 @@
           @tap="baglan"
         />
         <Button
-          :isEnabled="cuteButton"
+          :isEnabled="$store.state.cuteButton"
           col="1"
           row="0"
           androidElevation="6"
@@ -86,13 +86,13 @@
           row="0"
         />
         <Button
-          :isEnabled="buttonStatus"
+          :isEnabled="$store.state.buttonStatus"
           col="0"
           row="1"
           androidElevation="6"
           class="btn -rounded-lg"
           text="Gönder"
-          @tap="send"
+          @tap="asciiTohex"
         />
       </GridLayout>
     </GridLayout>
@@ -105,10 +105,7 @@ export default {
   data() {
     return {
       sendMessage: [],
-      text: "",
-      buttonStatus: false,
-      connectButton: true,
-      cuteButton: false
+      text: ""
     };
   },
   methods: {
@@ -118,19 +115,27 @@ export default {
       this.text = "";
     },
     baglan() {
-      this.$store
-        .dispatch("socket_baglan", { ip: this.ip, port: this.port })
-        .then(response => {
-          this.buttonStatus = true;
-          this.connectButton = false;
-          this.cuteButton = true;
-        });
+      this.$store.dispatch("socket_baglan", { ip: this.ip, port: this.port });
+
+    /*  this.$store.state.buttonStatus = true;
+      this.$store.state.connectButton = false;
+      this.$store.state.cuteButton = true;*/
+    },
+    asciiTohex() {
+      var arr1 = [];
+      for (var n = 0, l = this.text.length; n < l; n++) {
+        var hex = Number(this.text.charCodeAt(n)).toString(16);
+        arr1.push(hex);
+        console.log(arr1);
+      }
+
+      return arr1.join("");
     },
     cute() {
       this.$store.dispatch("socket_close");
-      this.buttonStatus = false;
-      this.connectButton = true;
-      this.cuteButton = false;
+      this.$store.state.buttonStatus = false;
+      this.$store.state.connectButton = true;
+      this.$store.state.cuteButton = false;
     }
   },
   beforeDestroy() {

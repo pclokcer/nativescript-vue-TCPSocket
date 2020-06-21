@@ -81,12 +81,6 @@
                 />
               </GridLayout>
             </GridLayout>
-            <!--<Button
-            class="btn -rounded-lg"
-            :row="index"
-            :text="item.name"
-            @tap="onButtonTap(item.name,item.ip,item.port)"
-            />-->
           </GridLayout>
         </StackLayout>
       </ScrollView>
@@ -95,15 +89,16 @@
 </template>
 
 <script>
-import localStorage from "tns-core-modules/application-settings";
 import ConnectPage from "./ConnectPage";
+var SecureStorage = require("nativescript-secure-storage").SecureStorage;
+var secureStorage = new SecureStorage();
 
 export default {
   data() {
     return {
       depo: [
-        { name: "test", ip: "192.168.1.7", port: "3000" },
-        { name: "server", ip: "176.235.81.119", port: "3306" }
+        { name: "this.name", ip: "192.168.1.7", port: "3000" },
+        { name: "this.name", ip: "192.168.1.8", port: "3000" }
       ],
       ip: "",
       port: "",
@@ -134,12 +129,23 @@ export default {
     Ekle() {
       if (this.name == "" || this.ip == "" || this.port == "") return;
       this.depo.push({ name: this.name, ip: this.ip, port: this.port });
+      var success = secureStorage.setSync({
+        key: "depo",
+        value: JSON.stringify(this.depo)
+      });
       this.name = "";
       this.ip = "";
       this.port = "";
     }
   },
-  created() {}
+  created() {
+    this.depo = JSON.parse(
+      secureStorage.getSync({
+        key: "depo"
+      })
+    );
+    if (this.depo == null) return (this.depo = []);
+  }
 };
 </script>
 

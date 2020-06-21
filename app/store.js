@@ -7,7 +7,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         tcpClient: '',
-        clients: []
+        clients: [],
+        buttonStatus: false,
+        connectButton: true,
+        cuteButton: false
     },
     mutations: {
 
@@ -16,13 +19,11 @@ export default new Vuex.Store({
         socket_baglan(context, connectData) {
             new Promise((resolve, reject) => {
                 context.state.tcpClient = new TcpClient();
-                console.log(connectData.ip, connectData.port)
                 context.state.tcpClient.start(connectData.ip, parseInt(connectData.port))
 
                 context.state.tcpClient.onClient = (data) => {
                     return resolve()
                 };
-
                 context.state.tcpClient.onData = (data) => {
                     context.state.clients.push(data)
                 };

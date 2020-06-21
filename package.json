@@ -13,6 +13,7 @@
   "repository": "<fill-your-repository-here>",
   "dependencies": {
     "@nativescript/theme": "~2.3.0",
+    "nativescript-secure-storage": "^2.6.0",
     "nativescript-simple-networking": "^0.1.1",
     "nativescript-vue": "~2.4.0",
     "tns-core-modules": "~6.5.0",
